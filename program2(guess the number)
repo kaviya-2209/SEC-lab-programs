@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Guess the Number</title>
+<style>
+  body {
+    font-family: sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;
+  }
+  .container {
+    background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgb(0 0 0 / 0.1); text-align: center; width: 280px;
+  }
+  input, button {
+    font-size: 16px; padding: 10px; border-radius: 6px; border: 2px solid #007acc; outline: none;
+  }
+  input { width: 100px; margin-right: 10px; }
+  button {
+    background: #007acc; color: white; border: none; cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button:hover:not(:disabled) { background: #005f99; }
+  button:disabled { background: #ccc; cursor: default; }
+  #feedback { margin-top: 20px; font-weight: bold; }
+  #attempts { margin-top: 10px; color: #555; }
+  #reset { margin-top: 20px; padding: 8px 20px; border: none; background: #5cb85c; color: white; border-radius: 6px; cursor: pointer; display: none; }
+  #reset:hover { background: #449d44; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Guess the Number</h2>
+  <input type="number" id="guessInput" min="1" max="10" placeholder="1-10">
+  <button id="guessBtn">Guess</button>
+  <p id="feedback"></p>
+  <p id="attempts"></p>
+  <button id="reset">Play Again</button>
+</div>
+
+<script>
+  let target, attempts;
+  const input = document.getElementById('guessInput');
+  const guessBtn = document.getElementById('guessBtn');
+  const feedback = document.getElementById('feedback');
+  const attemptsP = document.getElementById('attempts');
+  const resetBtn = document.getElementById('reset');
+
+  function startGame() {
+    target = Math.floor(Math.random() * 10) + 1;
+    attempts = 0;
+    feedback.textContent = '';
+    attemptsP.textContent = '';
+    input.disabled = false;
+    guessBtn.disabled = false;
+    resetBtn.style.display = 'none';
+    input.value = '';
+    input.focus();
+  }
+
+  function checkGuess() {
+    const guess = Number(input.value);
+    if (!guess || guess < 1 || guess > 10) {
+      alert('Enter a number between 1 and 10');
+      input.value = '';
+      return;
+    }
+    attempts++;
+    if (guess < target) {
+      feedback.textContent = 'Too Low';
+    } else if (guess > target) {
+      feedback.textContent = 'Too High';
+    } else {
+      feedback.textContent = 'Correct!';
+      attemptsP.textContent = `Guessed in ${attempts} attempt${attempts > 1 ? 's' : ''}.`;
+      input.disabled = true;
+      guessBtn.disabled = true;
+      resetBtn.style.display = 'inline-block';
+    }
+    input.value = '';
+    input.focus();
+  }
+
+  guessBtn.onclick = checkGuess;
+  resetBtn.onclick = startGame;
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') checkGuess(); });
+
+  startGame();
+</script>
+</body>
+</html>
